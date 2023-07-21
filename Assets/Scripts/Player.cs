@@ -5,6 +5,7 @@ using UnityEngine.AI;
 
 public abstract class Player : MonoBehaviour
 {
+    // POLYMORPHISM
     protected string _mName;
     protected int _age;
     protected NavMeshAgent _agent;
@@ -48,6 +49,7 @@ public abstract class Player : MonoBehaviour
         }
     }
 
+    // ABSTRACTION
     //abstract attack function ...
     protected abstract void Attack(GameObject target);
 

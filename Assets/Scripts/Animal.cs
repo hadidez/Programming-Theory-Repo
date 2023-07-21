@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Animal : Player
 {
+    // INHERITANCE
     public Animal(string name,int age)
     {
         _mName = name;
@@ -16,6 +17,7 @@ public class Animal : Player
 
     }
 
+    // POLYMORPHISM
     //player moving ...
     public override void Move(Vector3 target)
     {
@@ -23,6 +25,7 @@ public class Animal : Player
         Debug.Log("Im Walking like an Animal");
     }
 
+    // POLYMORPHISM
     //player attacking ...
     protected override void Attack(GameObject target)
     {

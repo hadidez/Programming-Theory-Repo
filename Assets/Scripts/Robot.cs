@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Robot : Player
 {
+    // INHERITANCE
     public Robot(string name,int age)
     {
         _mName = name;
@@ -15,6 +16,7 @@ public class Robot : Player
 
     }
 
+    // POLYMORPHISM
     //player moving ...
     public override void Move(Vector3 target)
     {
@@ -22,6 +24,7 @@ public class Robot : Player
         Debug.Log("Im Walking like a Robot");
     }
 
+    // POLYMORPHISM
     //player attacking ...
     protected override void Attack(GameObject target)
     {

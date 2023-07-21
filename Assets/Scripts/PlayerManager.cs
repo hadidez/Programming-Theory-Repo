@@ -7,6 +7,7 @@ public class PlayerManager : MonoBehaviour
 {
     private Player _selectedPlayer;
     [SerializeField] private LayerMask _playerLayerMask;
+    // POLYMORPHISM
     public static PlayerManager Instance { get; private set; }
     public event EventHandler OnSelectedPlayerChaned;
 
@@ -100,6 +101,7 @@ public class PlayerManager : MonoBehaviour
         _selectedPlayer = null;
     }
 
+    // POLYMORPHISM
     public GameObject GetSelectedPlayer()
     {
         if (_selectedPlayer != null)

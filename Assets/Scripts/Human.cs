@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Human : Player
 {
+    // INHERITANCE
     public Human(string name,int age)
     {
         _mName = name;
@@ -15,6 +16,7 @@ public class Human : Player
     {
     }
 
+    // POLYMORPHISM
     //player moving ...
     public override void Move(Vector3 target)
     {
@@ -22,6 +24,7 @@ public class Human : Player
         Debug.Log("Im Moving Like a Human!");
     }
 
+    // POLYMORPHISM
     //player attacking ...
     protected override void Attack(GameObject target)
     {
