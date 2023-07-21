@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class CameraControl : MonoBehaviour
 {
-    [SerializeField] private float _rotateSpeed;
-    private GameObject selectedPlayer;
+    [SerializeField] private float _normalRotateSpeed=10;
+    private bool _isCamInState = true;
 
     // Start is called before the first frame update
     void Start()
@@ -15,36 +15,59 @@ public class CameraControl : MonoBehaviour
 
     private void PlayerManager_OnSelectedPlayerChaned(object sender, System.EventArgs e)
     {
-        
-
+        _isCamInState = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        float rotateSpeed = _rotateSpeed;
-        if(PlayerManager.Instance.GetSelectedPlayer()!=null)
+        if (_isCamInState)
         {
-            Transform selectedPlayerTM = PlayerManager.Instance.GetSelectedPlayer().transform;
-            Vector3 direction = (selectedPlayerTM.position - transform.position).normalized;
-            if(Vector3.Distance(transform.position,selectedPlayerTM.position)>.4f)
-            {
-                transform.position += Time.deltaTime * direction * 10f;
-            }
-        }
-        if(Input.GetKey(KeyCode.LeftShift))
-        {
-            rotateSpeed = _rotateSpeed * 5;
+            RotateCam();
+            CamZoom();
         }
         else
         {
-            rotateSpeed = _rotateSpeed;
+            GoCamToSelectedObject();
+        }
+
+    }
+
+    private void GoCamToSelectedObject()
+    {
+        if (PlayerManager.Instance.GetSelectedPlayer() != null)
+        { 
+            Transform selectedPlayerTM = PlayerManager.Instance.GetSelectedPlayer().transform;
+            Vector3 direction = (selectedPlayerTM.position - transform.position).normalized;
+            if (Vector3.Distance(transform.position, selectedPlayerTM.position) > .4f)
+            {
+                transform.position += Time.deltaTime * direction * 10f;
+            }
+            else
+            {
+                //finish moving camera to selected object
+                _isCamInState = true;
+            }
+        }
+    }
+
+    private void RotateCam()
+    {
+        float rotateSpeed = _normalRotateSpeed;
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            rotateSpeed = _normalRotateSpeed * 5;
+        }
+        else
+        {
+            rotateSpeed = _normalRotateSpeed;
         }
         float axix = Input.GetAxisRaw("Horizontal");
         transform.Rotate(Vector3.up * Time.deltaTime * axix * rotateSpeed);
+    }
 
+    private void CamZoom()
+    {
         Camera.main.fieldOfView += Input.mouseScrollDelta.y * Time.deltaTime * 5f;
-
-       
     }
 }

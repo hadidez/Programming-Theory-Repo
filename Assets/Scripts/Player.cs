@@ -7,8 +7,9 @@ public abstract class Player : MonoBehaviour
 {
     protected string _mName;
     protected int _age;
-    protected float _walkSpeed;
     protected NavMeshAgent _agent;
+    [SerializeField] protected float _walkSpeed;
+    [SerializeField] protected Animator _animator;
     [SerializeField] protected Transform _target;
     [SerializeField] protected Transform _indicator;
 
@@ -25,6 +26,12 @@ public abstract class Player : MonoBehaviour
         PlayerManager.Instance.OnSelectedPlayerChaned += _OnSelectedPlayerChaned;
     }
 
+    private void LateUpdate()
+    {
+        float speed = _agent.velocity.magnitude;
+        _animator.SetFloat("walkSpeed", speed);
+    }
+
     //when selected player changed ...
     private void _OnSelectedPlayerChaned(object sender, System.EventArgs e)
     {
@@ -32,10 +39,11 @@ public abstract class Player : MonoBehaviour
     }
 
     //virtual moving function ...
-    protected virtual void Move(Vector3 target)
+    public virtual void Move(Vector3 target)
     {
         if(target!=null)
         {
+            _agent.speed = _walkSpeed;
             _agent.destination = target;
         }
     }

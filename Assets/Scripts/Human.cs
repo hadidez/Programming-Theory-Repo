@@ -16,7 +16,7 @@ public class Human : Player
     }
 
     //player moving ...
-    protected override void Move(Vector3 target)
+    public override void Move(Vector3 target)
     {
         base.Move(target);
         Debug.Log("Im Moving Like a Human!");

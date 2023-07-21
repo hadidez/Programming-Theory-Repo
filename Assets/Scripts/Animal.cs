@@ -17,7 +17,7 @@ public class Animal : Player
     }
 
     //player moving ...
-    protected override void Move(Vector3 target)
+    public override void Move(Vector3 target)
     {
         base.Move(target);
         Debug.Log("Im Walking like an Animal");

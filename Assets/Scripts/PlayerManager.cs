@@ -5,8 +5,7 @@ using System;
 
 public class PlayerManager : MonoBehaviour
 {
-    private bool _isAllPlayerInHome;
-    private GameObject _selectedPlayerGO;
+    private Player _selectedPlayer;
     [SerializeField] private LayerMask _playerLayerMask;
     public static PlayerManager Instance { get; private set; }
     public event EventHandler OnSelectedPlayerChaned;
@@ -27,54 +26,85 @@ public class PlayerManager : MonoBehaviour
 
     }
 
-
-
     // Update is called once per frame
     void Update()
     {
+        //left mouse button clicked!
         if(Input.GetMouseButtonDown(0))
         {
-            TrySelectPlayer();
+            DoActionBySelectObject();
         }
-    }
-
-    //check is all player in home.
-    public bool isAllPlayerInHome()
-    {
-        return _isAllPlayerInHome;
-    }
-
-
-    private void TrySelectPlayer()
-    {
-        Player selectedPlayer = CamToRay();
-        if (selectedPlayer != null || selectedPlayer != _selectedPlayerGO)
+        //right mouse button clicked!
+        if(Input.GetMouseButtonDown(1))
         {
-            //deactive all players indicators ...
-            OnSelectedPlayerChaned?.Invoke(this, EventArgs.Empty);
-            //set indicator for selected player
-            selectedPlayer.Select();
-            _selectedPlayerGO = selectedPlayer.gameObject;
+            DeSelectAll();
         }
     }
+
+    private void DoActionBySelectObject()
+    {
+        RaycastHit hitedObject = SelectObject();
+        if (hitedObject.transform.gameObject == null)
+            return;
+        switch (hitedObject.transform.gameObject.tag)
+        {
+            //select player
+            case "Player":
+                TrySelectPlayer(hitedObject);
+                break;
+            //move player
+            case "Ground":
+                TryMoveOnTarget(hitedObject);
+                break;
+        }
+    }
+
+    private void TrySelectPlayer(RaycastHit hitedObject)
+    {
+        if(hitedObject.transform.TryGetComponent<Player>(out Player candidatePlayer))
+        {
+            if (candidatePlayer != _selectedPlayer)
+            {
+                DeSelectAll();
+                //set indicator for selected player
+                candidatePlayer.Select();
+                _selectedPlayer = candidatePlayer;
+            }
+        }
+        
+    }
+
+    //try to move player
+    private void TryMoveOnTarget(RaycastHit hitedObject)
+    {
+        if (_selectedPlayer == null)
+            return;
+        _selectedPlayer.Move(hitedObject.point);
+    }
+
+
 
     //ray from camera to screen on mouse position..........
-    private Player CamToRay()
+    private RaycastHit SelectObject()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
         Physics.Raycast(ray, out hit);
-        Debug.Log(hit);
-        GameObject hitedGO = hit.transform.gameObject;
-        if (hitedGO.TryGetComponent<Player>(out Player player))
-        {
-            return player;
-        }
-        return null;
+        return hit;
+    }
+
+    private void DeSelectAll()
+    {
+        //deactive all players indicators ...
+        OnSelectedPlayerChaned?.Invoke(this, EventArgs.Empty);
+        _selectedPlayer = null;
     }
 
     public GameObject GetSelectedPlayer()
     {
-        return _selectedPlayerGO;
+        if (_selectedPlayer != null)
+            return _selectedPlayer.gameObject;
+        else
+            return null;
     }
 }

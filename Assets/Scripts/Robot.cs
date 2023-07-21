@@ -16,10 +16,9 @@ public class Robot : Player
     }
 
     //player moving ...
-    protected override void Move(Vector3 target)
+    public override void Move(Vector3 target)
     {
         base.Move(target);
-        transform.localScale += Vector3.up * Time.deltaTime * 10f;
         Debug.Log("Im Walking like a Robot");
     }
 
